@@ -1,0 +1,64 @@
+<script src="getUserMedia.min.js"> </script>
+<div id="webcam"></div> 
+<script>
+// options contains the configuration information for the shim
+// it allows us to specify the width and height of the video
+// output we're working with, the location of the fallback swf,
+// events that are triggered onCapture and onSave (for the fallback)
+// and so on.
+var options = {
+
+    "audio": true,
+    "video": true,
+
+    // the element (by id) you wish to use for 
+    // displaying the stream from a camera
+    el: "webcam",
+
+    extern: null,
+    append: true,
+
+    // height and width of the output stream
+    // container
+
+    width: 320,
+    height: 240,
+
+    // the recommended mode to be used is 
+    // 'callback ' where a callback is executed 
+    // once data is available
+    mode: "callback",
+
+    // the flash fallback Url
+    swffile: "fallback/jscam_canvas_only.swf",
+
+    // quality of the fallback stream
+    quality: 85,
+
+    // a debugger callback is available if needed
+    debug: function () {},
+
+    // callback for capturing the fallback stream
+    onCapture: function () {
+        window.webcam.save();
+    },
+
+    // callback for saving the stream, useful for
+    // relaying data further.
+    onSave: function (data) {},
+    onLoad: function () {}
+};
+var success= function (stream) {
+                var video = options.videoEl;
+                var vendorURL = window.URL || window.webkitURL;
+                video.src = vendorURL ? vendorURL.createObjectURL(stream) : stream;
+
+                video.onerror = function () {
+                    stream.stop();
+                    streamError();
+                };
+        };
+		var error=function(){};
+getUserMedia(options, success, error);
+
+</script>
